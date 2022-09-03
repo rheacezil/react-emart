@@ -45,7 +45,7 @@ export default function NavigationBar() {
           <span className="navbar-toggler-icon"></span>
         </Navbar.Toggle>
 
-        <div className="collapse navbar-collapse order-lg-1" id="navMenu">
+        <Navbar.Collapse className="order-lg-1" id="navMenu">
           <ul className="navbar-nav mx-auto text-center">
             <li className="nav-item px-2 py-2">
               <a href="/" className="nav-link text-dark">
@@ -78,7 +78,7 @@ export default function NavigationBar() {
               </a>
             </li>
           </ul>
-        </div>
+        </Navbar.Collapse>
       </Container>
     </Navbar>
   );
