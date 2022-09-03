@@ -5,6 +5,8 @@ import App from './App';
 
 // Bootstrap
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
+import 'react-loading-skeleton/dist/skeleton.css';
+
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
