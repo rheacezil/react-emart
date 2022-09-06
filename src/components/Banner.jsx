@@ -9,7 +9,7 @@ export default function Banner() {
           <div className="banner-content">
             <span className="text-white">Discount Up to 50%</span>
             <h2 className="mt-2">Grand Sale Offer!</h2>
-            <Link to="/" className="btn border-0">
+            <Link to="/login" className="btn border-0">
               Buy Now
             </Link>
           </div>
