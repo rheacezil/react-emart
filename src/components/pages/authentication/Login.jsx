@@ -1,15 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./auth.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSun, faMoon } from "@fortawesome/free-solid-svg-icons";
 import { faFacebook, faGoogle } from "@fortawesome/free-brands-svg-icons";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Form } from "react-bootstrap";
 import { useCollection } from "react-firebase-hooks/firestore";
 import { auth, db, facebookProvider, googleProvider } from "../../../firebase";
-import * as actionUser from "../../../redux/actions/actionUser";
 import { bindActionCreators } from "redux";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import * as actionUser from "../../../redux/actions/actionUser";
 import { useAuthState } from "react-firebase-hooks/auth";
 
 export default function Login() {
@@ -23,17 +23,24 @@ export default function Login() {
   const [userList] = useCollection(db.collection("users"));
   const [user] = useAuthState(auth);
   const { loginUser } = bindActionCreators(actionUser, useDispatch());
+  const navigate = useNavigate();
+  const activeUser = useSelector((state) => state.activeUser);
+
+  useEffect(() => {
+    if (user || activeUser.email) {
+      // navigate home page
+      navigate("/");
+    }
+  });
 
   const checkIfValid = () => {
     let isValid = false;
-
-    // check if user was not ever created
+    // Check if there's no user created
     if (userList.docs.length === 0) {
       setInvalidUser(true);
       return false;
     }
-
-    // check if user exists
+    // Check if user exist
     userList.docs.forEach((user) => {
       if (user.data().email === email && user.data().password === password) {
         setInvalidUser(false);
@@ -42,27 +49,20 @@ export default function Login() {
         setInvalidUser(true);
       }
     });
-
     //return statement
     return isValid;
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("SUBMIT!!");
     if (checkIfValid()) {
-      console.log("valid login");
       loginUser({ email });
-    } else {
-      console.log("invalid login");
     }
   };
 
   const facebookSignIn = (e) => {
     e.preventDefault();
-    auth
-      .signInWithPopup(facebookProvider)
-      .catch((error) => alert(error.message));
+    auth.signInWithPopup(facebookProvider).catch((e) => alert(e.message));
   };
 
   const googleSignIn = (e) => {

@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import firebase from "firebase/compat/app";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSun, faMoon } from "@fortawesome/free-solid-svg-icons";
 import { Form, Modal } from "react-bootstrap";
-import { db } from "../../../firebase";
+import { auth, db } from "../../../firebase";
 import { useCollection } from "react-firebase-hooks/firestore";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { useSelector } from "react-redux";
 
 export default function Signup() {
   const [darkMode, setDarkMode] = useState("");
@@ -21,6 +23,15 @@ export default function Signup() {
   const [invalidPassword, setInvalidPassword] = useState(false);
 
   const [userList] = useCollection(db.collection("users"));
+  const [user] = useAuthState(auth);
+  const activeUser = useSelector((state) => state.activeUser);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user || activeUser.email) {
+      navigate("/");
+    }
+  });
 
   const checkIfValid = () => {
     let isValid = true;
